@@ -22,9 +22,13 @@ _Completed 2a :white_check_mark:: Rendering a collection, modules_
 
 _Completed 2b :white_check_mark:: Forms_
 
+_Completed 2c :white_check_mark:: Getting data from server_
+
 courseinfo -> Exercises 2.1. - 2.5.
 
-phonebook -> Exercises 2.6. - 2.10.
+phonebook -> Exercises 2.6. - 2.11.
+
+data-countries -> Exercises 2.12. - 2.14. (Needs some refactoring)
 
 #### Part 3: Programming a server with NodeJS and Express
 

@@ -5,7 +5,7 @@ import SearchResult from "./components/SearchResult";
 
 const App = () => {
 	const [countries, setCountries] = useState([]);
-	const [searchTerm, setSearchTerm] = useState("");
+	const [countriesToShow, setCountriesToShow] = useState([]);
 
 	useEffect(() => {
 		Axios.get("https://restcountries.eu/rest/v2/all").then((response) => {
@@ -15,7 +15,7 @@ const App = () => {
 		});
 	}, []);
 
-	const filteredCountries = () => {
+	const filterCountries = (searchTerm) => {
 		let filtered = [];
 		if (searchTerm.trim() === "") {
 			filtered = [];
@@ -27,17 +27,24 @@ const App = () => {
 		if (filtered.length > 10) {
 			filtered = [];
 		}
-		return filtered;
+		setCountriesToShow(filtered);
+	};
+
+	const showCountry = (currCountry) => {
+		const handleCurrCountry = () => {
+			setCountriesToShow([currCountry]);
+		};
+		return handleCurrCountry;
 	};
 
 	const searchFilter = (event) => {
-		setSearchTerm(event.target.value.toLowerCase());
+		filterCountries(event.target.value.toLowerCase());
 	};
 
 	return (
 		<div>
 			<Filter handleFilter={searchFilter} />
-			<SearchResult countries={filteredCountries()} />
+			<SearchResult countries={countriesToShow} handleShow={showCountry} />
 		</div>
 	);
 };

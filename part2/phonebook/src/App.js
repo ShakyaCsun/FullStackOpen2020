@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Filter from "./components/Filter";
 import Form from "./components/Form";
 import Persons from "./components/Persons";
-import Axios from "axios";
+import phoneService from "./services/contacts";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
@@ -12,8 +12,8 @@ const App = () => {
 
 	useEffect(() => {
 		// Using a effect hook that is run only for the first render of the component
-		Axios.get("http://localhost:3001/persons").then((response) => {
-			const persons = response.data;
+		phoneService.getAll().then((initialData) => {
+			const persons = initialData;
 			setPersons(persons);
 		});
 	}, []);
@@ -37,13 +37,29 @@ const App = () => {
 			return;
 		}
 		if (persons.some((person) => person.name === newName)) {
-			alert(`${newName} is already added to Phonebook`);
-			return;
+			const person = persons.find((person) => person.name === newName);
+			const changedPerson = { ...person, number: newNumber };
+			if (
+				window.confirm(
+					`${newName} is already added to phonebook, replace the old number with a new one?`
+				)
+			) {
+				phoneService.update(person.id, changedPerson).then((returnedPerson) => {
+					setPersons(
+						persons.map((person) =>
+							person.name === newName ? returnedPerson : person
+						)
+					);
+				});
+			}
+		} else {
+			const newPerson = { name: newName, number: newNumber };
+			phoneService.create(newPerson).then((returnedData) => {
+				setPersons(persons.concat(returnedData));
+				setNewName("");
+				setNewNumber("");
+			});
 		}
-		const newPerson = { name: newName, number: newNumber };
-		setPersons(persons.concat(newPerson));
-		setNewName("");
-		setNewNumber("");
 	};
 
 	const personsToShow =
@@ -55,6 +71,15 @@ const App = () => {
 
 	const nameFilter = (event) => {
 		setSearchTerm(event.target.value);
+	};
+
+	const deleteButtonHandler = (id) => {
+		const name = persons.find((person) => person.id === id).name;
+		if (window.confirm(`Delete ${name} ?`)) {
+			phoneService.remove(id).then(() => {
+				setPersons(persons.filter((person) => person.id !== id));
+			});
+		}
 	};
 
 	return (
@@ -70,7 +95,7 @@ const App = () => {
 				number={newNumber}
 			/>
 			<h2>Numbers</h2>
-			<Persons persons={personsToShow} />
+			<Persons persons={personsToShow} handleDelete={deleteButtonHandler} />
 		</div>
 	);
 };

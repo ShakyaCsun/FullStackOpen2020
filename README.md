@@ -4,7 +4,7 @@ Coding Assignments from https://fullstackopen.com/
 
 #### Part 0: Fundamentals of Web apps
 
-Probably won't do
+Probably won't do, might do. Who knows?
 
 #### Part 1: Introduction to React
 
@@ -24,9 +24,11 @@ _Completed 2b :white_check_mark:: Forms_
 
 _Completed 2c :white_check_mark:: Getting data from server_
 
+_Completed 2d :white_check_mark:: Altering data in server_
+
 courseinfo -> Exercises 2.1. - 2.5.
 
-phonebook -> Exercises 2.6. - 2.11.
+phonebook -> Exercises 2.6. - 2.11. and Exercises 2.15. - 2.18.
 
 data-countries -> Exercises 2.12. - 2.14. (Needs some refactoring)
 

@@ -1,0 +1,16 @@
+.message {
+	padding: 5px;
+	border-radius: 3px;
+	background-color: #dddddd;
+	font-size: 20px;
+}
+
+.info {
+	color: green;
+	border: 2px solid green;
+}
+
+.error {
+	border: 2px solid red;
+	color: red;
+}

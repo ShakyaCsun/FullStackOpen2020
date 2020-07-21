@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Note from "./components/Note";
 import noteService from "./services/notes";
+import Notification from "./components/Notification";
 
 const App = () => {
 	const [notes, setNotes] = useState([]);
 	const [newNote, setNewNote] = useState("");
 	const [showAll, setShowAll] = useState(true);
+	const [errorMessage, setErrorMessage] = useState(null);
 
 	useEffect(() => {
 		console.log("effect");
@@ -14,7 +16,7 @@ const App = () => {
 		});
 	}, []);
 
-	console.log("render", notes.length, "notes");
+	// console.log("render", notes.length, "notes");
 
 	const addNote = (event) => {
 		event.preventDefault();
@@ -31,13 +33,6 @@ const App = () => {
 		});
 	};
 
-	const handleNoteChange = (event) => {
-		console.log(event.target.value);
-		setNewNote(event.target.value);
-	};
-
-	const notesToShow = showAll ? notes : notes.filter((note) => note.important);
-
 	const toggleImportanceOf = (id) => {
 		const note = notes.find((n) => n.id === id);
 		const changedNote = { ...note, important: !note.important };
@@ -48,15 +43,51 @@ const App = () => {
 				setNotes(notes.map((note) => (note.id !== id ? note : returnedNote)));
 			})
 			.catch((error) => {
-				alert(`The note '${note.content}' was already deleted from server`);
+				setErrorMessage(
+					`The note '${note.content}' was already deleted from server`
+				);
+				setTimeout(() => {
+					setErrorMessage(null);
+				}, 5000);
 				setNotes(notes.filter((n) => n.id !== id));
 			});
-		console.log(`Importance of ${id} has been toggled`);
+		// console.log(`Importance of ${id} has been toggled`);
+	};
+
+	const handleNoteChange = (event) => {
+		console.log(event.target.value);
+		setNewNote(event.target.value);
+	};
+
+	const notesToShow = showAll ? notes : notes.filter((note) => note.important);
+
+	const Footer = () => {
+		const footerStyle = {
+			color: "lime",
+			fontStyle: "italic",
+			fontSize: 16,
+			position: "fixed",
+			left: 0,
+			bottom: 0,
+			textAlign: "center",
+			width: "100%",
+			padding: 15,
+			backgroundColor: "gray",
+		};
+
+		return (
+			<div style={footerStyle}>
+				<em>
+					Note app, Department of Computer Science, University of Helsinki 2020
+				</em>
+			</div>
+		);
 	};
 
 	return (
 		<div>
 			<h1>Notes</h1>
+			<Notification message={errorMessage} />
 			<div>
 				<button onClick={() => setShowAll(!showAll)}>
 					show {showAll ? "important" : "all"}
@@ -75,6 +106,7 @@ const App = () => {
 				<input value={newNote} onChange={handleNoteChange} />
 				<button type="submit">save</button>
 			</form>
+			<Footer />
 		</div>
 	);
 };

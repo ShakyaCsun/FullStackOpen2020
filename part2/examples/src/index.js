@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import "./index.css";
 // import axios from "axios";
 
 // // This promise is resolved or fulfilled

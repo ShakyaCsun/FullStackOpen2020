@@ -3,12 +3,15 @@ import Filter from "./components/Filter";
 import Form from "./components/Form";
 import Persons from "./components/Persons";
 import phoneService from "./services/contacts";
+import Message from "./components/Message";
 
 const App = () => {
 	const [persons, setPersons] = useState([]);
 	const [newName, setNewName] = useState("");
 	const [newNumber, setNewNumber] = useState("");
 	const [searchTerm, setSearchTerm] = useState("");
+	const [message, setMessage] = useState(null);
+	const [type, setType] = useState();
 
 	useEffect(() => {
 		// Using a effect hook that is run only for the first render of the component
@@ -17,6 +20,14 @@ const App = () => {
 			setPersons(persons);
 		});
 	}, []);
+
+	const changeMessage = (text, style) => {
+		setMessage(text);
+		setType(style);
+		setTimeout(() => {
+			setMessage(null);
+		}, 5000);
+	};
 
 	const handleNameChange = (event) => {
 		// console.log(event.target.value);
@@ -50,12 +61,16 @@ const App = () => {
 							person.name === newName ? returnedPerson : person
 						)
 					);
+					changeMessage(`Updated ${newName}'s Number`, "info");
+					setNewName("");
+					setNewNumber("");
 				});
 			}
 		} else {
 			const newPerson = { name: newName, number: newNumber };
 			phoneService.create(newPerson).then((returnedData) => {
 				setPersons(persons.concat(returnedData));
+				changeMessage(`Added ${newName}`, "info");
 				setNewName("");
 				setNewNumber("");
 			});
@@ -76,15 +91,25 @@ const App = () => {
 	const deleteButtonHandler = (id) => {
 		const name = persons.find((person) => person.id === id).name;
 		if (window.confirm(`Delete ${name} ?`)) {
-			phoneService.remove(id).then(() => {
-				setPersons(persons.filter((person) => person.id !== id));
-			});
+			phoneService
+				.remove(id)
+				.then(() => {
+					setPersons(persons.filter((person) => person.id !== id));
+					changeMessage(`${name} was successfully deleted`, "info");
+				})
+				.catch(() => {
+					changeMessage(
+						`${name} has already been removed from server`,
+						"error"
+					);
+				});
 		}
 	};
 
 	return (
 		<div>
 			<h2>Phonebook</h2>
+			<Message message={message} type={type} />
 			<Filter handleFilter={nameFilter} />
 			<h3>Add a new Entry</h3>
 			<Form

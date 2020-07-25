@@ -42,7 +42,9 @@ data-countries -> Exercises 2.12. - 2.14. (Needs some refactoring)
 
 #### Part 3: Programming a server with NodeJS and Express
 
-#TODO
+_Completed 3a :white_check_mark:: Node.js and Express_
+
+phonebook-backend -> Exercises 3.1. - 3.8.
 
 #### Part 4: Testing express servers, user administration
 
